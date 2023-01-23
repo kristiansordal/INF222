@@ -1,7 +1,8 @@
 f :: (Integer, Integer) -> Integer
-f (x,y) = x * y + x + y
+f (x, y) = x * y + x + y
 
 data Natural = Zero | Succ Natural
+  deriving (Show, Eq, Read)
 
 count :: Natural -> Int
 count Zero = 0

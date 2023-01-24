@@ -8,6 +8,7 @@ public class SomeClass {
 
         B testB = new B();
         testB.a = true;
+
         C testC = new C();
 
         System.out.println(testA.allTrue());

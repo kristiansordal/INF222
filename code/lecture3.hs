@@ -9,15 +9,6 @@ data Natural = Zero | Succ Natural
 natToInt Zero = 0
 natToInt (Succ n) = 1 + natToInt n
 
--- natToInt :: String -> Integer
--- natToInt s
---   | take 4 s == "Zero" = 0
---   | take 6 s == "Succ (" = 1 + natToInt (drop 6 s)
-
--- parseNat :: Natural -> String
--- parseNat Zero = "Zero"
--- parseNat (Succ n) = "Succ (" ++ parseNat n ++ ")"
-
 count :: Natural -> Int
 count Zero = 0
 count (Succ n) = 1 + count n

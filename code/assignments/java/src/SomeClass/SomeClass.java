@@ -1,3 +1,4 @@
+package SomeClass;
 public class SomeClass {
     public static void main(String[] args) {
         A testA = new A();

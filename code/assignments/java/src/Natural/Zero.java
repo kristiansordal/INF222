@@ -6,4 +6,9 @@ public class Zero implements Natural {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "Zero";
+    }
+
 }

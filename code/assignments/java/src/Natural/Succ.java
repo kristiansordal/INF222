@@ -12,4 +12,8 @@ public class Succ implements Natural {
         return 1 + nat.naturalToInt();
     }
 
+    @Override
+    public String toString() {
+        return "Succ " + nat.toString();
+    }
 }

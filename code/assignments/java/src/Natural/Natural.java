@@ -22,4 +22,15 @@ public interface Natural {
     static public Natural mult(Natural x, Natural y) {
         return intToNat(x.naturalToInt() * y.naturalToInt());
     }
+
+    static public boolean le(Natural x, Natural y) {
+        if (x instanceof Zero) {
+            return true;
+        } else if (y instanceof Zero) {
+            return false;
+        }
+        Succ s1 = (Succ) x;
+        Succ s2 = (Succ) y;
+        return Natural.le(s1.nat, s2.nat);
+    }
 }

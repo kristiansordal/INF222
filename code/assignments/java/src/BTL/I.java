@@ -10,13 +10,8 @@ public class I implements Expr {
     }
 
     @Override
-    public Natural eval() {
+    public Natural eval() throws Exception {
         return new Succ(e.eval());
-    }
-
-    @Override
-    public String toString() {
-        return "I " + e.toString();
     }
 
     @Override
@@ -27,6 +22,16 @@ public class I implements Expr {
     @Override
     public Expr eval1() throws Exception {
         return new I(e.eval1());
+    }
+
+    @Override
+    public String toString() {
+        return "I " + e.toString();
+    }
+
+    @Override
+    public short eval2() {
+        return (short) (1 + e.eval2());
     }
 
 }

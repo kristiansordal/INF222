@@ -12,7 +12,7 @@ public class Mult implements Expr {
     }
 
     @Override
-    public Natural eval() {
+    public Natural eval() throws Exception {
         return Natural.mult(e1.eval(), e2.eval());
     }
 
@@ -24,5 +24,10 @@ public class Mult implements Expr {
     @Override
     public Expr eval1() throws Exception {
         return Expr.mult(e1.eval1(), e2.eval1());
+    }
+
+    @Override
+    public short eval2() {
+        return (short) ((short) e1.eval2() * e2.eval2());
     }
 }

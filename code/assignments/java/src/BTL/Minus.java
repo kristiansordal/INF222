@@ -13,7 +13,7 @@ public class Minus implements Expr {
     }
 
     @Override
-    public Natural eval() {
+    public Natural eval() throws Exception {
         return Natural.monus(e1.eval(), e2.eval());
     }
 
@@ -25,5 +25,13 @@ public class Minus implements Expr {
     @Override
     public Expr eval1() throws Exception {
         return Expr.monus(e1.eval1(), e2.eval1());
+    }
+
+    @Override
+    public short eval2() {
+        short s1 = e1.eval2();
+        short s2 = e2.eval2();
+
+        return (short) (s1 >= s2 ? s1 - s2 : 0);
     }
 }

@@ -25,7 +25,6 @@ public class Or implements Expr {
 
     @Override
     public boolean isNormalForm() {
-        // TODO Auto-generated method stub
         return false;
     }
 

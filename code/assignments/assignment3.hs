@@ -2,6 +2,8 @@ module Assignment3 where
 
 import BTL2
 
+-- import BTL3
+
 x = Ifte (Le T (Mult (I Z) (I (I T)))) (Plus T T) (Le (I Z) F)
 
 -- if (T <= (1 * (1 + 1 + T))):

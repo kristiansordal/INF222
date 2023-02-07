@@ -1,0 +1,12 @@
+\documentclass{article}
+\input{preamble.tex}
+
+\begin{document}
+    \section{Guidelines for runtime scoping}
+
+    \begin{ex}
+       Explain the individual cases of the output by referring to semantics of runtime scoping. 
+
+       \paragraph{1.} For the first statement, \texttt{stmtscope1}, we print out the result of the statement by calling \texttt{lookup} on the environment returned by the function \texttt{exec env stmtscope1}. This uses runtime scoping because the execution, and thus the creation of the environment occurs when we need the result of the execution, in this case to print it. 
+    \end{ex}
+\end{document}

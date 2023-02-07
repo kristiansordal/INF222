@@ -71,7 +71,7 @@ public class Zero implements Natural {
 }
 ```
 
-And, for our `Succ` class will look like this:
+And our `Succ` class will look like this:
 
 ```Java
 public class Succ implements Natural {
@@ -88,4 +88,4 @@ public class Succ implements Natural {
 }
 ```
 
-Note how we use the field variable, which eliminates the need for an argument in our function.
+Note the use of a field variable and a constructor, which eliminates the need for an argument in our function.

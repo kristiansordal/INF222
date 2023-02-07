@@ -44,30 +44,22 @@ data Register
 -----------------------
 
 -- | A few ASTs for register based CalcExprAST.
-calculatorRegisterAST1 =
-  Lit 4
+calculatorRegisterAST1 = Lit 4
 
-calculatorRegisterAST2 =
-  Neg (Mult (Add (Lit 3) (Sub (Lit 7) (Lit 13))) (Lit 19))
+calculatorRegisterAST2 = Neg (Mult (Add (Lit 3) (Sub (Lit 7) (Lit 13))) (Lit 19))
 
-calculatorRegisterAST3 =
-  Add (Reg Reg1) (Reg Reg4)
+calculatorRegisterAST3 = Add (Reg Reg1) (Reg Reg4)
 
-calculatorRegisterAST4 =
-  Reg Reg2
+calculatorRegisterAST4 = Reg Reg2
 
 -- | A few ASTs for setting registers CalcStmtAST.
-calculatorSetRegisterAST1 =
-  SetReg Reg4 calculatorRegisterAST1
+calculatorSetRegisterAST1 = SetReg Reg4 calculatorRegisterAST1
 
-calculatorSetRegisterAST2 =
-  SetReg Reg1 calculatorRegisterAST2
+calculatorSetRegisterAST2 = SetReg Reg1 calculatorRegisterAST2
 
-calculatorSetRegisterAST3 =
-  SetReg Reg2 calculatorRegisterAST3
+calculatorSetRegisterAST3 = SetReg Reg2 calculatorRegisterAST3
 
-calculatorSetRegisterAST4 =
-  SetReg Reg1 calculatorRegisterAST4
+calculatorSetRegisterAST4 = SetReg Reg1 calculatorRegisterAST4
 
 eval :: CalcExprAST -> Store -> Integer
 eval (Lit x) s = x

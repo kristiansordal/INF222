@@ -1,4 +1,6 @@
 {-# LANGUAGE BlockArguments #-}
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+{-# OPTIONS_GHC -Wno-unused-local-binds #-}
 
 -- | AST for register based integer calculator.
 --
@@ -8,6 +10,8 @@ module Pam2RegisterAST where
 
 import Data.Char
 import Pam2RegisterStore
+import System.Console.Haskeline
+import Text.Read
 
 -----------------------
 
@@ -62,7 +66,7 @@ calculatorSetRegisterAST3 = SetReg Reg2 calculatorRegisterAST3
 calculatorSetRegisterAST4 = SetReg Reg1 calculatorRegisterAST4
 
 eval :: CalcExprAST -> Store -> Integer
-eval (Lit x) s = x
+eval (Lit x) _ = x
 eval (Add x y) s = eval x s + eval y s
 eval (Mult x y) s = eval x s * eval y s
 eval (Sub x y) s = eval x s - eval y s
@@ -77,37 +81,43 @@ getRegisterIndex = fromIntegral . digitToInt . last . show
 
 test :: IO ()
 test = do
-  let regs = setStore 1 (eval calculatorRegisterAST1 registerStore) registerStore
-      regs' = setStore 2 (eval calculatorRegisterAST2 regs) regs
-      regs'' = setStore 3 (eval calculatorRegisterAST3 regs') regs'
-      regs''' = setStore 4 (eval calculatorRegisterAST4 regs'') regs''
+  let store = setStore (getRegisterIndex Reg4) 43 (setStore (getRegisterIndex Reg2) 21 (setStore (getRegisterIndex Reg1) 11 registerStore))
+      store1 = execute (SetReg Reg1 (Lit 11)) registerStore
+      store2 = execute (SetReg Reg2 (Add (Reg Reg1) (Lit 10))) store1
+      store3 = execute (SetReg Reg4 (Sub (Mult (Reg Reg2) (Lit 2)) (Lit (-1)))) store2
+      expected = [4, 57, 54, 21]
+      evals = map (`eval` store3) [calculatorRegisterAST1, calculatorRegisterAST2, calculatorRegisterAST3, calculatorRegisterAST4]
+      correct = all ((== True) . uncurry (==)) (zip expected evals)
 
-  -- evals = map (`eval` regs) [calculatorRegisterAST1, calculatorRegisterAST2, calculatorRegisterAST3, calculatorRegisterAST4]
-  print regs'''
+  if correct
+    && (store == store3)
+    && (57 == eval (Reg Reg1) (execute calculatorSetRegisterAST2 registerStore))
+    && (0 == eval (Reg Reg2) (execute calculatorSetRegisterAST3 registerStore))
+    && (0 == eval (Reg Reg1) (execute calculatorSetRegisterAST4 registerStore))
+    then putStrLn "Unit Tests Hold"
+    else putStrLn "Test failed"
 
-main = do
-  putStrLn "−−␣ Interactive ␣ register ␣ calulator ␣−−"
-  runInputT defaultSettings (loop registerStore)
+main =
+  do
+    putStrLn "Interative Register Calculator"
+    runInputT defaultSettings (loop registerStore)
   where
     loop :: Store -> InputT IO ()
     loop state = do
-      input <- getInputLine
-        "c|␣"
-        case input of
-          Nothing -> return ()
-          Just "" ->
-            do outputStrLn "Finished "; return ()
-          Just "show" ->
-            do outputStrLn $ " state ␣=␣" ++ show state; loop state
-          Just str -> do
-            case readMaybe str :: Maybe CalcStmtAST of
-              Nothing -> do
-                outputStrLn $ "Not␣a␣statement:␣" ++ show str
-                loop state
-              Just stmt ->
-                let SetReg reg expr = stmt
-                 in do
-                      outputStrLn $ show reg ++ "␣=␣" ++ show (evaluate expr state)
-                      loop
-                      $ execute stmt state
-      print ""
+      input <- getInputLine "c|"
+      case input of
+        Nothing -> return ()
+        Just "" -> do outputStrLn "Finished"; return ()
+        Just "show" -> do
+          outputStrLn $ "state = " ++ show state
+          loop state
+        Just str -> do
+          outputStrLn (show str)
+          case (readMaybe str :: Maybe CalcStmtAST) of
+            Nothing -> do
+              outputStrLn $ "Not a statement: " ++ show str
+              loop state
+            Just stmt -> do
+              let SetReg reg expr = stmt
+              outputStrLn $ show reg ++ " = " ++ show (eval expr state)
+              loop $ execute stmt state

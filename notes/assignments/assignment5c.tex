@@ -1,0 +1,119 @@
+\documentclass{article}
+\input{preamble.tex}
+
+\begin{document}
+    \section{Explanation of GroupSwap}
+
+    The GroupSwap algorithm is an algorithm used to swap the values of two variables using arithmetics. It will behave differently depending on the semantics we use. 
+
+
+    \begin{definition}
+        Definition of groupswap: 
+        \begin{lstlisting}
+    procgroupswap =
+      Proc
+        "groupswap"
+        [("x", (Upd, "Integer")), ("y", (Upd, "Integer"))]
+        ( Sequence
+            [ Assign "y" (Plus (Var "x") (Var "y")),
+              Assign "x" (Minus (Var "y") (Var "x")),
+              Assign "y" (Minus (Var "y") (Var "x"))
+            ]
+        )
+        \end{lstlisting}
+
+        Which translates to the following mathematical expressions
+
+        \begin{align*}
+            y &= x + y \\
+            x &= y - x \\
+            y &= y - x \\
+        \end{align*}
+    \end{definition}
+
+    \subsection{Reference Semantics}
+    Using reference semantics, the algorithm will behave in the following way:
+    \medskip
+
+    Given that \( x \) and \( y \) both point to the same variable \( a = 12 \), we obtain the following:
+
+    \begin{align*}
+        y &= 12 + 12 && x = 24 \quad y = 24 \\
+        x &= 24 - 24 && x = 0 \quad y = 0 \\
+        y &= 0 - 0 && x = 0 \quad y = 0\\
+    \end{align*}
+
+    \subsection{Copy in / Copy out semantics}
+
+    Using copy in / copy out semantics, the algorithm works in the following way:
+    \medskip
+
+    Again, given two variables \( x = 12 \) and \( y = 24 \), we obtain the following
+
+    \begin{align*}
+        y &= 12 + 24 && x = 12 \quad y = 36 \\
+        x &= 36 - 12 && x = 24 \quad y = 36 \\
+        y &= 36 - 24 && x = 24 \quad y = 12\\
+    \end{align*}
+
+    \subsection{The Difference}
+
+    As we can see, using the different semantics make the algorithm return different results. This is due to the fact that when we are using reference semantics, \( x \) and \( y \) both point to the same address in memory, thus both are making changes to the value stored at this address. When using copy in / copy out semantics, the variables each get their own memory address, which means that they won't change the same value. Using a language with support for pointers, such as C++, we can see this effect in action, demonstrated below
+
+    \begin{eg}
+        
+        Using reference semantics, we write the following code:
+        \begin{lstlisting}
+    int main() {
+        int a = 10;
+        int *x = &a;
+        int *y = &a;
+
+        std::cout << "Before swap:" << std::endl;
+        std::cout << "x = " << *x << std::endl; // x = 10
+        std::cout << "y = " << *y << std::endl; // y = 10
+
+        // Swap values pointed to by x and y
+        *y = *x + *y;
+        *x = *x - *y;
+        *y = *x - *y;
+
+        std::cout << "After swap:" << std::endl;
+        std::cout << "x = " << *x << std::endl; // x = 0
+        std::cout << "y = " << *y << std::endl; // y = 0
+        return 0;
+    }
+        \end{lstlisting}
+
+    Using copy in / copy out semantics, we can write the following code:
+
+
+    \begin{lstlisting}
+    int main() {
+        int a = 10;
+        int b = 15;
+        int x = a;
+        int y = b;
+
+        std::cout << "Before swap:" << std::endl;
+        std::cout << "x = " << x << std::endl;  // x = 10
+        std::cout << "y = " << y << std::endl;  // y = 15
+
+        // Swap values of x and y
+        y = x + y;
+        x = x - y;
+        y = x - y;
+
+        std::cout << "After swap:" << std::endl;
+        std::cout << "x = " << x << std::endl;  // x = 15
+        std::cout << "y = " << y << std::endl;  // y = 10
+        return 0;
+    }
+    \end{lstlisting}
+    \end{eg}
+
+
+
+\end{document}
+
+

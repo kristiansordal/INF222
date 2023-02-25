@@ -105,7 +105,7 @@ test = do
 
 main =
   do
-    putStrLn "Interative Register Calculator"
+    putStrLn "Interactive Register Calculator"
     runInputT defaultSettings (loop registerStore)
   where
     loop :: Store -> InputT IO ()

@@ -11,7 +11,6 @@ module Pam4State where
 
 -- Use Haskell's array data structure
 import Data.Array
-import Pam4VariableAST
 
 -----------------------
 
@@ -35,7 +34,7 @@ getValue :: String -> State -> Integer
 getValue vname (env, store) =
   case lookup vname env of
     Just loc -> getStore store loc
-    Nothing -> error $ "Variable " ++ vname ++ " not found in state " ++ show env
+    Nothing -> error $ "Variable " ++ vname ++ " not found in state " ++ (show env)
 
 -- | Add a new variable with value to the state.
 addVariable :: String -> Integer -> State -> State
@@ -50,7 +49,7 @@ changeValue vname value (env, store) = (env, store')
   where
     store' = case lookup vname env of
       Just loc -> setStore loc value store
-      Nothing -> error $ "Variable " ++ show vname ++ " not found in state " ++ show env
+      Nothing -> error $ "Variable " ++ (show vname) ++ " not found in state " ++ (show env)
 
 -----------------------
 
@@ -68,12 +67,12 @@ emptyEnvironment = []
 declareVariable :: String -> Integer -> Environment -> Environment
 declareVariable vname ind env =
   case lookup vname env of
-    Just _ ->
+    Just loc ->
       error $
         "New variable "
-          ++ show (vname, ind)
+          ++ (show (vname, ind))
           ++ " already registered in "
-          ++ show env
+          ++ (show env)
     Nothing -> (vname, ind) : env
 
 -----------------------
@@ -91,7 +90,7 @@ getStore :: Store -> Integer -> Integer
 getStore store ind =
   if low <= ind && ind <= high
     then store ! ind
-    else error $ "Not a store index " ++ show ind
+    else error $ "Not a store index " ++ (show ind)
   where
     (low, high) = bounds store
 
@@ -100,7 +99,7 @@ setStore :: Integer -> Integer -> Store -> Store
 setStore ind val store =
   if low <= ind && ind <= high
     then store // [(ind, val)]
-    else error $ "Not a store index " ++ show ind ++ " for " ++ show val
+    else error $ "Not a store index " ++ (show ind) ++ " for " ++ (show val)
   where
     (low, high) = bounds store
 
@@ -117,7 +116,7 @@ enlargeStore store value = (high', store')
 
 -- | Unit tests for State.
 unittestPam4State = do
-  print "-- unittestPam4State --"
+  print $ "-- unittestPam4State --"
   -- putStrLn \$ "Empty state = " ++ (show newState)
   let state1 = addVariable "v1" 1 newState
   let state2 = addVariable "v2" 4 state1
@@ -128,8 +127,8 @@ unittestPam4State = do
   -- putStrLn \$ "Value of v3 == " ++ (show \$ getValue "v3" state4)
   -- putStrLn \$ "State3 = " ++ (show state3)
   putStrLn $
-    if 1 == getValue "v1" state4
-      && 25 == getValue "v2" state4
-      && 9 == getValue "v3" state4
+    if (1 == (getValue "v1" state4))
+      && (25 == (getValue "v2" state4))
+      && (9 == (getValue "v3" state4))
       then "Unit tests hold"
       else "Tests failed"
